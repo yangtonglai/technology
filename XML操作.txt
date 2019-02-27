@@ -1,0 +1,47 @@
+ 
+ 
+ private static String XML_TAG = "<?xml version='1.0' encoding='UTF-8'?>";
+
+    /**
+     *将xml字符串转化为java对象
+     */
+    public static <T> T xmlToBean(String xml, Class<T> clazz) {
+        XStream xStream = new XStream(new DomDriver());
+        xStream.processAnnotations(clazz);
+        Object object = xStream.fromXML(xml);
+        T t = clazz.cast(object);
+        return t;
+    }
+
+    /**
+     * 将java对象转化为xml字符串
+     */
+    public static String beanToXml(Object obj) {
+        XStream xStream = new XStream(new DomDriver());
+        xStream.processAnnotations(obj.getClass());
+        // 剔除所有tab、制表符、换行符
+        String xml = xStream.toXML(obj).replaceAll("\\s+", " ");
+        return xml;
+    }
+
+    /**
+     * 将java对象转化为xml字符串（包含xml头部信息）
+     */
+    public static String beanToXmlWithTag(Object object) {
+        String xml = XML_TAG + beanToXml(object);
+        return xml;
+    }
+
+    /**测试*/
+    @Test
+    public void testXstream(){
+        System.out.println("----------------");
+        AigxNews aigxNews = new AigxNews();
+        aigxNews.setId(Long.parseLong("12"));
+        String s = beanToXml(aigxNews);
+        System.out.println(s);
+        System.out.println("----------------");
+
+        AigxNews aigxNews2 = xmlToBean(s,AigxNews.class);
+        System.out.print(aigxNews2);
+    }
