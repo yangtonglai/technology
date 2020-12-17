@@ -1,0 +1,24 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+  aop:
+    proxy-target-class: true
+    auto: true
+  datasource:
+    druid:
+      base:
+        url: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+        username: root
+        password: root
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      back-db:
+        url: jdbc:mysql://localhost:3306/test2?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+        username: root
+        password: root
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+server:
+  port: 9999

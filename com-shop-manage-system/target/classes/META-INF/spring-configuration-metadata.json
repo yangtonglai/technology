@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "spring.datasource.druid.back-db",
+      "type": "javax.sql.DataSource",
+      "sourceType": "com.shop.manage.system.config.DynamicDataSourceConfig",
+      "sourceMethod": "backDBDataSource()"
+    },
+    {
+      "name": "spring.datasource.druid.base",
+      "type": "javax.sql.DataSource",
+      "sourceType": "com.shop.manage.system.config.DynamicDataSourceConfig",
+      "sourceMethod": "baseDataSource()"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}
