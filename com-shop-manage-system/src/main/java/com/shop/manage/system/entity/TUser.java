@@ -14,8 +14,8 @@ public class TUser {
     @TableId(value = "ID", type = IdType.AUTO)
     private Integer id;
 
-    @TableField("user_name")
-    private String userName;
+    @TableField("login_name")
+    private String loginName;
 
 
     public Integer getId() {
@@ -26,11 +26,11 @@ public class TUser {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
     }
 }
