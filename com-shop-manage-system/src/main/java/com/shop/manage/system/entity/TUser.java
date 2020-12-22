@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.io.Serializable;
+
 /**
  * @author Mr.joey
  */
 @TableName("t_user")
-public class TUser {
+public class TUser implements Serializable {
 
     @TableId(value = "ID", type = IdType.AUTO)
     private Integer id;
