@@ -1,20 +1,15 @@
 package com.shop.manage.system.support;
 
-import com.alibaba.fastjson.JSON;
 import com.shop.manage.system.exception.CustomException;
-import org.springframework.core.MethodParameter;
-import org.springframework.http.MediaType;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * controller 异常响应统一返回值
  * @author Mr.joey
  */
 @RestControllerAdvice(basePackages = "com.shop.manage.system.controller")

@@ -7,4 +7,6 @@ package com.shop.manage.system.contant;
 public class ProjectContant {
 
     public static final int ERROR_500= 500;
+
+    public static final String ENCODING = "UTF-8";
 }

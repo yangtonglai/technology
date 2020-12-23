@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
+ * controller 统一返回值
  * @author Mr.joey
  */
 @RestControllerAdvice(basePackages = "com.shop.manage.system.controller")
