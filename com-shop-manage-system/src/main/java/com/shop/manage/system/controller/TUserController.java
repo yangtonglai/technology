@@ -5,6 +5,11 @@ import com.shop.manage.system.contant.ProjectContant;
 import com.shop.manage.system.entity.TUser;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.service.TUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,6 +25,7 @@ import java.util.List;
 /**
  * @author Mr.joey
  */
+@Api(tags = "TUserController测试")
 @RestController
 @RequestMapping("/user")
 public class TUserController {
@@ -30,6 +35,7 @@ public class TUserController {
     @Autowired
     TUserService tUserService;
 
+    @ApiOperation(value = "多数据源获取测试",notes = "测试test")
     @GetMapping("/test")
     public List<TUser> test(){
 
@@ -41,6 +47,7 @@ public class TUserController {
 
         return tUserService.getBaseDbAllUser();
     }
+
 
     @GetMapping("/test1")
     public TUser test1(){
@@ -74,13 +81,18 @@ public class TUserController {
     }
 
 
+    @ApiOperation(value = "测试传参id",notes = "测试test3")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "记录id", dataType = "String", defaultValue = "")
+    })
     @GetMapping("/test3")
-    public List<TUser> test3(@RequestParam("id")String id){
+    public List<TUser> test3(@RequestParam(value = "id",defaultValue = "")String id){
 
         return tUserService.getBaseDbAllUser();
     }
 
 
+    @ApiOperation(value = "测试传参body",notes = "测试test5")
     @PostMapping("/test4")
     public List<TUser> test4(@RequestBody TUser tUser){
 
