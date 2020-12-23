@@ -179,7 +179,7 @@ public class FtpUtil {
             sftp.put(localFilePath  + File.separator + localFileName, localFileName);
         } catch (Exception e){
             uploadFlag = false;
-            log.error("ftp 上传文件至主应用出错："+e.getMessage(), e);
+            log.error("ftp 上传文件出错："+e.getMessage(), e);
         }
         return uploadFlag;
     }

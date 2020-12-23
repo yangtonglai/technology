@@ -5,3 +5,11 @@ server:
   port: 9999
   servlet:
     context-path: /shop
+
+
+UploadOrDownload:
+  ftp-ip: 192.168.1.124
+  ftp-port: 22
+  ftp-userName: root
+  ftp-pwd: root
+  ftp-path: /app/shop/
