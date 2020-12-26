@@ -17,7 +17,7 @@ import com.shop.manage.system.service.TIndexService;
 import com.shop.manage.system.service.TNavigateService;
 import com.shop.manage.system.vo.IndexAddVo;
 import com.shop.manage.system.vo.NavigateAddVo;
-import com.shop.manage.system.vo.NavigateQueryVo;
+import com.shop.manage.system.vo.NavigateResVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -96,8 +96,8 @@ public class TIndexBusiness {
      * 底部菜单导航栏 查询接口
      * @return
      */
-    public List<NavigateQueryVo> getNavigateInfo() {
-        List<NavigateQueryVo> data = new ArrayList<>();
+    public List<NavigateResVo> getNavigateInfo() {
+        List<NavigateResVo> data = new ArrayList<>();
         //查询所有启用状态且为父节点菜单
         List<TNavigate> parentList = tNavigateService.list(
                 new LambdaQueryWrapper<TNavigate>()
@@ -118,7 +118,7 @@ public class TIndexBusiness {
             if (BeanUtil.isNotEmpty(list)){
                 Map<Integer, List<TNavigate>> collect = list.stream().collect(Collectors.groupingBy(TNavigate::getParentMenuId));
                 if (tNavigate.getParentMenuId()==-1) {
-                    NavigateQueryVo vo = new NavigateQueryVo();
+                    NavigateResVo vo = new NavigateResVo();
                     BeanUtil.copyProperties(tNavigate, vo);
                     List<TNavigate> tNavigates = collect.get(tNavigate.getId());
                     if (BeanUtil.isNotEmpty(tNavigates)) {

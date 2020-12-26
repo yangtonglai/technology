@@ -10,7 +10,7 @@ import java.util.List;
  * @author ytl
  */
 @Data
-public class NavigateQueryVo {
+public class NavigateResVo {
     /**
      * 菜单id
      */

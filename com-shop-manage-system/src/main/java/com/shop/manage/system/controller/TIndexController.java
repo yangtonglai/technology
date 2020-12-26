@@ -8,7 +8,7 @@ import com.shop.manage.system.entity.TIndex;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.vo.IndexAddVo;
 import com.shop.manage.system.vo.NavigateAddVo;
-import com.shop.manage.system.vo.NavigateQueryVo;
+import com.shop.manage.system.vo.NavigateResVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ import java.util.List;
  * @since 2020-12-23
  */
 @RestController
-@RequestMapping("/tIndex")
+@RequestMapping("/tIndex/")
 @Slf4j
 public class TIndexController {
 
@@ -65,7 +65,7 @@ public class TIndexController {
      * @return
      */
     @GetMapping("getNavigateInfo")
-    public List<NavigateQueryVo> getNavigateInfo(){
+    public List<NavigateResVo> getNavigateInfo(){
         return tIndexBusiness.getNavigateInfo();
     }
 
