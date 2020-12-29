@@ -8,11 +8,10 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * <p>
- *  会员信息表
+ *  门店-职务表
  * </p>
  *
  * @author yangtl
@@ -21,7 +20,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class TUser implements Serializable {
+public class TShopOrg implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,39 +28,19 @@ public class TUser implements Serializable {
     private Integer id;
 
     /**
-     * 登录名
+     * 职务id
      */
-    private String loginName;
+    private Integer orgId;
 
     /**
-     * 昵称
+     * 门店id
      */
-    private String nickName;
-
-    /**
-     * 启用状态 0：未启用 1：已启用
-     */
-    private String isAvailable;
-
-    /**
-     * 身份证号
-     */
-    private String idCard;
-
-    /**
-     * 联系电话
-     */
-    private String contactPhone;
-
-    /**
-     * 真实名称
-     */
-    private String factName;
+    private Integer shopId;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 创建人
@@ -69,24 +48,15 @@ public class TUser implements Serializable {
     private String createUser;
 
     /**
-     * 修改时间
+     * 
+修改时间
      */
-    private Date modifyTime;
+    private LocalDateTime modifyTime;
 
     /**
      * 修改人
      */
     private String modifyUser;
-
-    /**
-     * 会员等级
-     */
-    private Integer memberLevel;
-
-    /**
-     * 头像地址
-     */
-    private String headImageUrl;
 
 
 }

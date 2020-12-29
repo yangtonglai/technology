@@ -10,11 +10,13 @@ import com.shop.manage.system.dto.ProductDetailsResDto;
 import com.shop.manage.system.entity.TIndex;
 import com.shop.manage.system.entity.TProduct;
 import com.shop.manage.system.entity.TProductType;
+import com.shop.manage.system.entity.TUser;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.mapper.TProductMapper;
 import com.shop.manage.system.service.TProductFileService;
 import com.shop.manage.system.service.TProductService;
 import com.shop.manage.system.service.TProductTypeService;
+import com.shop.manage.system.service.TUserService;
 import com.shop.manage.system.vo.ProductDetailsResVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,8 @@ public class TProductTypeBusiness {
     private TProductService tProductService;
     @Autowired
     private TProductMapper tProductMapper;
+    @Autowired
+    private TUserService tUserService;
 
     /**
      * 产品类型 查询
@@ -120,7 +124,7 @@ public class TProductTypeBusiness {
         if (BeanUtil.isEmpty(productList)){
             return data;
         }
-        ///根据产品id、分组
+        //根据产品id、分组
         Map<Integer, List<ProductDetailsResDto>> productMap = productList.stream().collect(Collectors.groupingBy(ProductDetailsResDto::getId));
         //获取产品的图片list
         Map<Integer,List<String>> imageMap = new HashMap<>();
@@ -131,6 +135,43 @@ public class TProductTypeBusiness {
         }
         //数据封装
         for (ProductDetailsResDto resDto : productList) {
+            ProductDetailsResVo vo = new ProductDetailsResVo();
+            if (MapUtil.isNotEmpty(imageMap)&&BeanUtil.isNotEmpty(imageMap.get(resDto.getId()))){
+                vo.setProductImageList(imageMap.get(resDto.getId()));
+            }
+            BeanUtil.copyProperties(resDto,vo);
+            data.add(vo);
+        }
+        return data;
+    }
+
+    /**
+     * 会员等级价格
+     * @param userId
+     * @return
+     */
+    public List<ProductDetailsResVo> getMemberPrice(String userId) {
+        List<ProductDetailsResVo> data = new ArrayList<>();
+        //查询该账号的会员等级
+        TUser tUser = tUserService.getOne(new LambdaQueryWrapper<TUser>()
+                .select(TUser::getId,TUser::getMemberLevel)
+                .eq(TUser::getId, userId)
+                .eq(TUser::getIsAvailable, commonContants.IS_AVAILABLE));
+        if (BeanUtil.isEmpty(tUser)){
+            return data;
+        }
+        List<ProductDetailsResDto> memberPrice = tProductMapper.getMemberPrice(tUser.getMemberLevel());
+       //根据产品id、分组
+        Map<Integer, List<ProductDetailsResDto>> productMap = memberPrice.stream().collect(Collectors.groupingBy(ProductDetailsResDto::getId));
+        //获取产品的图片list
+        Map<Integer,List<String>> imageMap = new HashMap<>();
+        for (ProductDetailsResDto resVo : memberPrice) {
+            List<ProductDetailsResDto> productDetailsResVos = productMap.get(resVo.getId());
+            List<String> collect = productDetailsResVos.stream().map(ProductDetailsResDto::getProductImageUrl).collect(Collectors.toList());
+            imageMap.put(resVo.getId(),collect);
+        }
+        //数据封装
+        for (ProductDetailsResDto resDto : memberPrice) {
             ProductDetailsResVo vo = new ProductDetailsResVo();
             if (MapUtil.isNotEmpty(imageMap)&&BeanUtil.isNotEmpty(imageMap.get(resDto.getId()))){
                 vo.setProductImageList(imageMap.get(resDto.getId()));

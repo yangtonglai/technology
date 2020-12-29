@@ -16,4 +16,20 @@
                  on pro.id = fil.product_id and fil.is_available='1'
         where pro.is_available ='1' ;
     </select>
+
+    <select id="getMemberPrice" resultType="com.shop.manage.system.dto.ProductDetailsResDto">
+    select pro.id,
+       pro.product_name,
+       pro.product_type_id,
+       pro.product_standard,
+       pro.producing_area,
+       pro.is_available,
+       fil.product_image_url,
+       pri.product_price price
+    from t_product pro
+        left join t_product_file fil
+                on pro.id = fil.product_id and fil.is_available='1'
+    inner join t_product_supply_price pri on pro.id = pri.product_id and pri.is_available='1'
+    where pro.is_available ='1' and pri.member_level= #{member_level} ;
+    </select>
 </mapper>

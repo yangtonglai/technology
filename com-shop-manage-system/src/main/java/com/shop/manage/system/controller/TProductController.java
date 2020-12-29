@@ -72,6 +72,18 @@ public class TProductController {
         return tProductTypeBusiness.getProductDetail();
     }
 
+    /**
+     * 产品详情模块
+     * 会员等级价格  查询接口
+     * @return
+     */
+    // TODO: 2020/12/29 用户id
+    @GetMapping("getMemberPrice")
+    public List<ProductDetailsResVo> getMemberPrice(String userId){
+        return tProductTypeBusiness.getMemberPrice(userId);
+    }
+
+
 
 }
 
