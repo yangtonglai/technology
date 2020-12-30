@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shop.manage.system.mapper.TOrgMapper">
 
+    <select id="getOrgList" resultType="com.shop.manage.system.vo.OrgResVo">
+    select
+       rg.id orgId,
+       rg.org_name,
+       op.id shopId,
+       op.shop_name
+    from t_org rg
+        inner join t_shop_org sh on rg.id=sh.org_id
+        inner join t_shop op on sh.shop_id=op.id and op.is_available='1'
+    where rg.is_available='1';
+    </select>
 </mapper>

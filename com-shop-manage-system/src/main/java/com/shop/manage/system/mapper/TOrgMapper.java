@@ -2,6 +2,10 @@ package com.shop.manage.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shop.manage.system.entity.TOrg;
+import com.shop.manage.system.vo.OrgResVo;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,9 @@ import com.shop.manage.system.entity.TOrg;
  */
 public interface TOrgMapper extends BaseMapper<TOrg> {
 
+    /**
+     * 查询职务列表
+     * @return
+     */
+    List<OrgResVo> getOrgList();
 }

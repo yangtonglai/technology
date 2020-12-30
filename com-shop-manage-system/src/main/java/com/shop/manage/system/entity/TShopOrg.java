@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -40,7 +41,7 @@ public class TShopOrg implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 创建人
@@ -48,10 +49,9 @@ public class TShopOrg implements Serializable {
     private String createUser;
 
     /**
-     * 
-修改时间
+     * 修改时间
      */
-    private LocalDateTime modifyTime;
+    private Date modifyTime;
 
     /**
      * 修改人
