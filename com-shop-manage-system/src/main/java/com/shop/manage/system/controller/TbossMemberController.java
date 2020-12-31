@@ -5,9 +5,11 @@ import com.shop.manage.system.entity.TRole;
 import com.shop.manage.system.entity.TShop;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.vo.OrgResVo;
+import com.shop.manage.system.vo.UserInfoAddVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -130,8 +132,8 @@ public class TbossMemberController {
      * @return
      */
     @PostMapping("addMember")
-    public void addMember(){
-        tboosMemberBusiness.addMember();
+    public void addMember(@RequestBody @Valid UserInfoAddVo addVo) throws CustomException {
+        tboosMemberBusiness.addMember(addVo);
     }
 
 }

@@ -7,16 +7,16 @@ import com.shop.manage.system.contant.commonContants;
 import com.shop.manage.system.entity.*;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.mapper.TOrgMapper;
-import com.shop.manage.system.service.TOrgService;
-import com.shop.manage.system.service.TRoleService;
-import com.shop.manage.system.service.TShopOrgService;
-import com.shop.manage.system.service.TShopService;
+import com.shop.manage.system.service.*;
 import com.shop.manage.system.vo.OrgResVo;
+import com.shop.manage.system.vo.UserInfoAddVo;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,8 +40,96 @@ public class TboosMemberBusiness {
     private TOrgMapper tOrgMapper;
     @Autowired
     private TRoleService tRoleService;
+    @Autowired
+    private TUserService tUserService;
+    @Autowired
+    private TUserRoleService tUserRoleService;
+    @Autowired
+    private TUserOrgService tUserOrgService;
 
-    public void addMember() {
+    /**
+     * 账号注册：
+     * 1-账号基础信息注册
+     * 2-账号角色关联
+     * 3-账号-职务关联
+     * @param addVo
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void addMember(UserInfoAddVo addVo) throws CustomException {
+        //账号注册
+        TUser tUser = new TUser();
+        Date date = new Date();
+        try {
+            if (BeanUtil.isNotEmpty(addVo.getLoginName())){
+                tUser.setLoginName(addVo.getLoginName());
+            }
+            tUser.setNickName(addVo.getNickName());
+            tUser.setIsAvailable(commonContants.IS_AVAILABLE);
+            if (BeanUtil.isNotEmpty(addVo.getIdCard())){
+                tUser.setIdCard(addVo.getIdCard());
+            }
+            if (BeanUtil.isNotEmpty(addVo.getContactPhone())){
+                tUser.setContactPhone(addVo.getContactPhone());
+            }
+            if (BeanUtil.isNotEmpty(addVo.getFactName())){
+                tUser.setFactName(addVo.getFactName());
+            }
+            if (BeanUtil.isNotEmpty(addVo.getHeadImageUrl())){
+                tUser.setHeadImageUrl(addVo.getHeadImageUrl());
+            }
+            tUser.setCreateTime(date);
+            tUser.setCreateUser("yy");
+            tUser.setModifyTime(date);
+            tUser.setModifyUser("yy");
+            tUser.setMemberLevel(addVo.getMemberLevel());
+            tUserService.save(tUser);
+            //查询生成得id
+            TUser one = tUserService.getOne(new LambdaQueryWrapper<TUser>().eq(TUser::getCreateTime, date));
+            if (BeanUtil.isEmpty(one)||BeanUtil.isEmpty(one.getId())){
+                throw new CustomException(ProjectContant.ERROR_500,"注册账号错误！");
+            }
+            //账号角色关联
+            addUserRole(one.getId(),addVo.getRoleId(),date);
+            //账职务绑定
+            addUserOrg(one.getId(),addVo.getOrgId(),date);
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new CustomException(ProjectContant.ERROR_500,"注册账号错误！");
+        }
+
+    }
+
+    /**
+     * 账号-角色绑定
+     * @param userId
+     * @param roleId
+     * @param date
+     */
+    private void addUserRole(Integer userId,Integer roleId,Date date){
+        TUserRole data = new TUserRole();
+        data.setRoleId(roleId);
+        data.setUserId(userId);
+        data.setCreateTime(date);
+        data.setCreateUser("yy");
+        data.setModifyTime(date);
+        data.setModifyUser("yy");
+        tUserRoleService.save(data);
+    }
+    /**
+     * 职务-账号绑定
+     * @param userId
+     * @param orgId
+     * @param date
+     */
+    private void addUserOrg(Integer userId,Integer orgId,Date date){
+        TUserOrg data = new TUserOrg();
+        data.setOrgId(orgId);
+        data.setUserId(userId);
+        data.setCreateTime(date);
+        data.setCreateUser("yy");
+        data.setModifyTime(date);
+        data.setModifyUser("yy");
+        tUserOrgService.save(data);
     }
 
 
