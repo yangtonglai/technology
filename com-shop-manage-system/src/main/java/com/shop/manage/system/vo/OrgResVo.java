@@ -26,5 +26,5 @@ public class OrgResVo {
     /**
      * 店门名称
      */
-    private Integer shopName;
+    private String shopName;
 }

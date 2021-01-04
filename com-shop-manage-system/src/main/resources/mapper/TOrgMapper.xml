@@ -11,6 +11,12 @@
     from t_org rg
         inner join t_shop_org sh on rg.id=sh.org_id
         inner join t_shop op on sh.shop_id=op.id and op.is_available='1'
-    where rg.is_available='1';
+    where rg.is_available='1'
     </select>
+
+    <insert id="saveOrg" useGeneratedKeys="true" keyProperty="id" parameterType="com.shop.manage.system.entity.TOrg">
+	insert into t_org
+	    (org_name,is_available,create_time,create_user,modify_time,modify_user)
+	values(#{orgName},'1',#{createTime},#{createUser},#{modifyTime},#{modifyUser})
+    </insert>
 </mapper>

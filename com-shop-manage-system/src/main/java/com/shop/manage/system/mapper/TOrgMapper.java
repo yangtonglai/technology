@@ -22,4 +22,8 @@ public interface TOrgMapper extends BaseMapper<TOrg> {
      * @return
      */
     List<OrgResVo> getOrgList();
+    /**
+     * 插入职位
+     */
+    Integer saveOrg(TOrg tOrg);
 }

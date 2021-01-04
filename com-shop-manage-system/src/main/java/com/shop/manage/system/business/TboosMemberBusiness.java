@@ -7,17 +7,17 @@ import com.shop.manage.system.contant.commonContants;
 import com.shop.manage.system.entity.*;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.mapper.TOrgMapper;
+import com.shop.manage.system.mapper.TUserMapper;
 import com.shop.manage.system.service.*;
+import com.shop.manage.system.vo.MemberResVo;
 import com.shop.manage.system.vo.OrgResVo;
 import com.shop.manage.system.vo.UserInfoAddVo;
-import lombok.Data;
+import com.shop.manage.system.vo.MemberUpdateVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +46,8 @@ public class TboosMemberBusiness {
     private TUserRoleService tUserRoleService;
     @Autowired
     private TUserOrgService tUserOrgService;
+    @Autowired
+    private TUserMapper tUserMapper;
 
     /**
      * 账号注册：
@@ -82,16 +84,16 @@ public class TboosMemberBusiness {
             tUser.setModifyTime(date);
             tUser.setModifyUser("yy");
             tUser.setMemberLevel(addVo.getMemberLevel());
-            tUserService.save(tUser);
+            tUserMapper.saveMember(tUser);
             //查询生成得id
-            TUser one = tUserService.getOne(new LambdaQueryWrapper<TUser>().eq(TUser::getCreateTime, date));
-            if (BeanUtil.isEmpty(one)||BeanUtil.isEmpty(one.getId())){
+            Integer id = tUser.getId();
+            if (BeanUtil.isEmpty(id)){
                 throw new CustomException(ProjectContant.ERROR_500,"注册账号错误！");
             }
             //账号角色关联
-            addUserRole(one.getId(),addVo.getRoleId(),date);
+            addUserRole(id ,addVo.getRoleId(),date);
             //账职务绑定
-            addUserOrg(one.getId(),addVo.getOrgId(),date);
+            addUserOrg(id ,addVo.getOrgId(),date);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new CustomException(ProjectContant.ERROR_500,"注册账号错误！");
@@ -194,31 +196,34 @@ public class TboosMemberBusiness {
      *   职务-门店信息关联
      * @param orgName
      */
+    @Transactional(rollbackFor = Exception.class)
     public void addOrgInfo(String orgName,Integer shopId) throws CustomException {
         try {
             //新增职务信息
             TOrg addVo = new TOrg();
             Date date = new Date();
+            // TODO: 2021/1/4 userid
             addVo.setOrgName(orgName);
             addVo.setIsAvailable(commonContants.IS_AVAILABLE);
             addVo.setCreateTime(date);
             addVo.setCreateUser("yy");
             addVo.setModifyTime(date);
             addVo.setModifyUser("yy");
-            tOrgService.save(addVo);
+            tOrgMapper.saveOrg(addVo);
+            Integer id = addVo.getId();
             //职务-门店信息关联
-            //查询生成的职务id
-            List<TOrg> list = tOrgService.list(new LambdaQueryWrapper<TOrg>().eq(TOrg::getCreateTime, date));
-            if (BeanUtil.isNotEmpty(list)){
-                TShopOrg shopOrg = new TShopOrg();
-                shopOrg.setShopId(shopId);
-                shopOrg.setOrgId(list.get(0).getId());
-                shopOrg.setCreateTime(date);
-                shopOrg.setCreateUser("yy");
-                shopOrg.setModifyTime(date);
-                shopOrg.setModifyUser("yy");
-                tShopOrgService.save(shopOrg);
+            if (BeanUtil.isEmpty(id)){
+                throw new CustomException(ProjectContant.ERROR_500,"职务添加失败！");
             }
+            TShopOrg shopOrg = new TShopOrg();
+            shopOrg.setShopId(shopId);
+            shopOrg.setOrgId(id);
+            shopOrg.setCreateTime(date);
+            shopOrg.setCreateUser("yy");
+            shopOrg.setModifyTime(date);
+            shopOrg.setModifyUser("yy");
+            tShopOrgService.save(shopOrg);
+
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new CustomException(ProjectContant.ERROR_500,"职务添加失败！");
@@ -312,5 +317,60 @@ public class TboosMemberBusiness {
             updateVo.setModifyUser("yy");
             tRoleService.updateById(updateVo);
         }
+    }
+
+    /**
+     * 会员中心查询接口
+     * @param id
+     * @return
+     */
+    public MemberResVo getMember(Integer id) {
+        return tUserMapper.getMember(id);
+    }
+
+    /**
+     * 会员中心修改接口
+     * @param updateVo
+     */
+    public void updateMember(MemberUpdateVo updateVo) {
+        //账号注销
+        if (commonContants.IS_DELETE.equals(updateVo.getType())){
+            TUser tUser = new TUser();
+            tUser.setId(updateVo.getId());
+            tUser.setIsAvailable(commonContants.NOT_AVAILABLE);
+            tUser.setModifyTime(new Date());
+            tUser.setModifyUser("yy");
+            tUserService.updateById(tUser);
+        }
+        //修改信息
+        else if (commonContants.IS_UPDATE.equals(updateVo.getType())){
+            TUser tUser = new TUser();
+            tUser.setId(updateVo.getId());
+            if (BeanUtil.isNotEmpty(updateVo.getLoginName())){
+                tUser.setLoginName(updateVo.getLoginName());
+            }
+            if (BeanUtil.isNotEmpty(updateVo.getNickName())){
+                tUser.setNickName(updateVo.getNickName());
+            }
+            if (BeanUtil.isNotEmpty(updateVo.getIdCard())){
+                tUser.setIdCard(updateVo.getIdCard());
+            }
+            if (BeanUtil.isNotEmpty(updateVo.getContactPhone())){
+                tUser.setContactPhone(updateVo.getContactPhone());
+            }
+            if (BeanUtil.isNotEmpty(updateVo.getFactName())){
+                tUser.setFactName(updateVo.getFactName());
+            }
+            if (BeanUtil.isNotEmpty(updateVo.getMemberLevel())){
+                tUser.setMemberLevel(updateVo.getMemberLevel());
+            }
+            if (BeanUtil.isNotEmpty(updateVo.getHeadImageUrl())){
+                tUser.setHeadImageUrl(updateVo.getHeadImageUrl());
+            }
+            tUser.setModifyUser("yy");
+            tUser.setModifyTime(new Date());
+            tUserService.updateById(tUser);
+        }
+
     }
 }

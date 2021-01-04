@@ -4,8 +4,10 @@ import com.shop.manage.system.business.TboosMemberBusiness;
 import com.shop.manage.system.entity.TRole;
 import com.shop.manage.system.entity.TShop;
 import com.shop.manage.system.exception.CustomException;
+import com.shop.manage.system.vo.MemberResVo;
 import com.shop.manage.system.vo.OrgResVo;
 import com.shop.manage.system.vo.UserInfoAddVo;
+import com.shop.manage.system.vo.MemberUpdateVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -135,5 +137,28 @@ public class TbossMemberController {
     public void addMember(@RequestBody @Valid UserInfoAddVo addVo) throws CustomException {
         tboosMemberBusiness.addMember(addVo);
     }
+
+    /**
+     * 老板会员中心模块 会员中心查询接口
+     * @param id 账号id
+     * @return
+     */
+    @GetMapping("getMember")
+    public MemberResVo getMember(@RequestParam(value = "id")Integer id) {
+         return tboosMemberBusiness.getMember(id);
+    }
+
+    /**
+     * 老板会员中心模块 会员中心修改接口
+     * @param updateVo
+     * @return
+     */
+    @PostMapping("updateMember")
+    public void updateMember(@RequestBody @Valid MemberUpdateVo updateVo) {
+         tboosMemberBusiness.updateMember(updateVo);
+    }
+
+
+
 
 }
