@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.manage.system.mapper.TShopOrderMapper">
+    <select id="getProductSort" resultType="com.shop.manage.system.dto.OrderSortResDto">
+        SELECT der.id,
+               der.product_id,
+               der.buy_count,
+               der.price,
+               der.producing_area,
+               der.product_standard,
+               der.product_type_name,
+               der.shop_product_name,
+               der.status,
+               fil.product_image_url
+        FROM t_shop_order der
+                 left join t_shop_order_file fil
+                ON (der.id=fil.shop_order_id and fil.is_available='1'
+                 and der.status = fil.status)
+        WHERE der.is_available='1'
+    </select>
+</mapper>

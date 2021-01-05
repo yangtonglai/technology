@@ -2,6 +2,7 @@ package com.shop.manage.system.business;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.shop.manage.system.contant.ProjectContant;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Slf4j
-public class TProductTypeBusiness {
+public class TProductInfoBusiness {
 
     @Autowired
     private TProductTypeService tProductTypeService;
@@ -121,7 +122,7 @@ public class TProductTypeBusiness {
         //查询产品类型和图片
         List<ProductDetailsResVo> data = new ArrayList<>();
         List<ProductDetailsResDto> productList = tProductMapper.getProductDetail();
-        if (BeanUtil.isEmpty(productList)){
+        if (CollUtil.isEmpty(productList)){
             return data;
         }
         //根据产品id、分组
@@ -130,8 +131,10 @@ public class TProductTypeBusiness {
         Map<Integer,List<String>> imageMap = new HashMap<>();
         for (ProductDetailsResDto resVo : productList) {
             List<ProductDetailsResDto> productDetailsResVos = productMap.get(resVo.getId());
-            List<String> collect = productDetailsResVos.stream().map(ProductDetailsResDto::getProductImageUrl).collect(Collectors.toList());
-            imageMap.put(resVo.getId(),collect);
+            if (CollUtil.isNotEmpty(productDetailsResVos)){
+                List<String> collect = productDetailsResVos.stream().map(ProductDetailsResDto::getProductImageUrl).collect(Collectors.toList());
+                imageMap.put(resVo.getId(),collect);
+            }
         }
         //数据封装
         for (ProductDetailsResDto resDto : productList) {
@@ -157,7 +160,7 @@ public class TProductTypeBusiness {
                 .select(TUser::getId,TUser::getMemberLevel)
                 .eq(TUser::getId, userId)
                 .eq(TUser::getIsAvailable, commonContants.IS_AVAILABLE));
-        if (BeanUtil.isEmpty(tUser)){
+        if (null==tUser){
             return data;
         }
         List<ProductDetailsResDto> memberPrice = tProductMapper.getMemberPrice(tUser.getMemberLevel());
@@ -167,8 +170,10 @@ public class TProductTypeBusiness {
         Map<Integer,List<String>> imageMap = new HashMap<>();
         for (ProductDetailsResDto resVo : memberPrice) {
             List<ProductDetailsResDto> productDetailsResVos = productMap.get(resVo.getId());
-            List<String> collect = productDetailsResVos.stream().map(ProductDetailsResDto::getProductImageUrl).collect(Collectors.toList());
-            imageMap.put(resVo.getId(),collect);
+            if (CollUtil.isNotEmpty(productDetailsResVos)){
+                List<String> collect = productDetailsResVos.stream().map(ProductDetailsResDto::getProductImageUrl).collect(Collectors.toList());
+                imageMap.put(resVo.getId(),collect);
+            }
         }
         //数据封装
         for (ProductDetailsResDto resDto : memberPrice) {

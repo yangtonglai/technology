@@ -2,6 +2,8 @@ package com.shop.manage.system.business;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.shop.manage.system.contant.IndexContants;
 import com.shop.manage.system.contant.ProjectContant;
@@ -103,7 +105,7 @@ public class TIndexBusiness {
                 new LambdaQueryWrapper<TNavigate>()
                         .eq(TNavigate::getIsAvailable, commonContants.IS_AVAILABLE)
         );
-        if (BeanUtil.isEmpty(parentList)){
+        if (parentList.isEmpty()||parentList.size()==0){
             return data;
         }
         //查询字节点菜单
@@ -115,13 +117,13 @@ public class TIndexBusiness {
         );
         //数据封装
         for (TNavigate tNavigate : parentList) {
-            if (BeanUtil.isNotEmpty(list)){
+            if (CollUtil.isNotEmpty(list)){
                 Map<Integer, List<TNavigate>> collect = list.stream().collect(Collectors.groupingBy(TNavigate::getParentMenuId));
                 if (tNavigate.getParentMenuId()==-1) {
                     NavigateResVo vo = new NavigateResVo();
                     BeanUtil.copyProperties(tNavigate, vo);
                     List<TNavigate> tNavigates = collect.get(tNavigate.getId());
-                    if (BeanUtil.isNotEmpty(tNavigates)) {
+                    if (CollUtil.isNotEmpty(tNavigates)) {
                         vo.setChildList(tNavigates);
                     }
                     data.add(vo);
@@ -193,7 +195,7 @@ public class TIndexBusiness {
             List<TNavigate> list = tNavigateService.list(new LambdaQueryWrapper<TNavigate>().eq(TNavigate::getParentMenuId, one.getId()));
             //提取子菜单id
             List<TNavigate> menuList = new ArrayList<>();
-            if (BeanUtil.isNotEmpty(list)){
+            if (CollUtil.isNotEmpty(list)){
                 for (TNavigate tNavigate : list) {
                     TNavigate vo = new TNavigate();
                     vo.setId(tNavigate.getId());

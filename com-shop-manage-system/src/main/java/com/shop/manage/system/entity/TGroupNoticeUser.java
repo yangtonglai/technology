@@ -8,20 +8,19 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * <p>
- *  会员信息表
+ *  群组-人员-消息表
  * </p>
  *
  * @author yangtl
- * @since 2020-12-29
+ * @since 2021-01-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class TUser implements Serializable {
+public class TGroupNoticeUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,39 +28,29 @@ public class TUser implements Serializable {
     private Integer id;
 
     /**
-     * 登录名
+     * 群组id
      */
-    private String loginName;
+    private Integer groupId;
 
     /**
-     * 昵称
+     * 人员id
      */
-    private String nickName;
+    private Integer userId;
 
     /**
-     * 启用状态 0：未启用 1：已启用
+     * 通知id
      */
-    private String isAvailable;
+    private Integer noticeId;
 
     /**
-     * 身份证号
+     * 是否已读 0:未读 1：已读
      */
-    private String idCard;
-
-    /**
-     * 联系电话
-     */
-    private String contactPhone;
-
-    /**
-     * 真实名称
-     */
-    private String factName;
+    private String isRead;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 创建人
@@ -71,25 +60,12 @@ public class TUser implements Serializable {
     /**
      * 修改时间
      */
-    private Date modifyTime;
+    private LocalDateTime modifyTime;
 
     /**
      * 修改人
      */
     private String modifyUser;
 
-    /**
-     * 会员等级
-     */
-    private Integer memberLevel;
-
-    /**
-     * 头像地址
-     */
-    private String headImageUrl;
-    /**
-     * 地址
-     */
-    private String userAddress;
 
 }

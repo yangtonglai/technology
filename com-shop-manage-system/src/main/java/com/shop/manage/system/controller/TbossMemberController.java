@@ -4,15 +4,13 @@ import com.shop.manage.system.business.TboosMemberBusiness;
 import com.shop.manage.system.entity.TRole;
 import com.shop.manage.system.entity.TShop;
 import com.shop.manage.system.exception.CustomException;
-import com.shop.manage.system.vo.MemberResVo;
-import com.shop.manage.system.vo.OrgResVo;
-import com.shop.manage.system.vo.UserInfoAddVo;
-import com.shop.manage.system.vo.MemberUpdateVo;
+import com.shop.manage.system.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 老板会员中心模块 控制层
@@ -157,6 +155,25 @@ public class TbossMemberController {
     public void updateMember(@RequestBody @Valid MemberUpdateVo updateVo) {
          tboosMemberBusiness.updateMember(updateVo);
     }
+
+
+    /**
+     * 板会员中心模块  订单分类
+     * @return
+     */
+    @GetMapping("getOrderSort")
+    public Map<Integer,List<ShopOrderResVo>>getOrderSort(){
+        return tboosMemberBusiness.getOrderSort();
+    }
+    /**
+     * 板会员中心模块  通知公告
+     * @return
+     */
+    @GetMapping("getNoticeInfo")
+    public Map<Integer,String>getNoticeInfo(String userId){
+        return tboosMemberBusiness.getNoticeInfo(userId);
+    }
+
 
 
 

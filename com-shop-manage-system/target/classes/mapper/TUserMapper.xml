@@ -10,6 +10,7 @@
        tu.login_name,
        tu.nick_name,
        tu.contact_phone,
+       tu.user_address,
        tu.id,
        tr.role_id,
        sg.org_id,
@@ -36,8 +37,8 @@
     <insert id="saveMember" useGeneratedKeys="true" keyProperty="id" parameterType="com.shop.manage.system.entity.TUser">
 	INSERT INTO t_user
 	 (login_name, nick_name, is_available, id_card, contact_phone
-	 , fact_name, create_time, create_user, modify_time, modify_user, member_level, head_image_url)
+	 , fact_name, create_time, create_user, modify_time, modify_user, member_level, head_image_url,user_address)
 	 VALUES (#{loginName}, #{nickName}, '1', #{idCard}, #{contactPhone}, #{factName},
-	 #{createTime}, #{createUser}, #{modifyTime}, #{modifyUser}, #{memberLevel}, #{headImageUrl})
+	 #{createTime}, #{createUser}, #{modifyTime}, #{modifyUser}, #{memberLevel}, #{headImageUrl},#{userAddress})
     </insert>
 </mapper>

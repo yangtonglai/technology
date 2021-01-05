@@ -55,4 +55,8 @@ public class MemberUpdateVo {
      * 头像地址
      */
     private String headImageUrl;
+    /**
+     * 地址
+     */
+    private String userAddress;
 }

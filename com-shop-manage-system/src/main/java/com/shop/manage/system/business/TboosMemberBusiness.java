@@ -1,25 +1,27 @@
 package com.shop.manage.system.business;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.shop.manage.system.contant.IndexContants;
 import com.shop.manage.system.contant.ProjectContant;
 import com.shop.manage.system.contant.commonContants;
+import com.shop.manage.system.dto.OrderSortResDto;
 import com.shop.manage.system.entity.*;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.mapper.TOrgMapper;
+import com.shop.manage.system.mapper.TShopOrderMapper;
 import com.shop.manage.system.mapper.TUserMapper;
 import com.shop.manage.system.service.*;
-import com.shop.manage.system.vo.MemberResVo;
-import com.shop.manage.system.vo.OrgResVo;
-import com.shop.manage.system.vo.UserInfoAddVo;
-import com.shop.manage.system.vo.MemberUpdateVo;
+import com.shop.manage.system.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ytl
@@ -48,6 +50,12 @@ public class TboosMemberBusiness {
     private TUserOrgService tUserOrgService;
     @Autowired
     private TUserMapper tUserMapper;
+    @Autowired
+    private TShopOrderMapper tShopOrderMapper;
+    @Autowired
+    private TGroupNoticeUserService tGroupNoticeUserService;
+    @Autowired
+    private TNoticeService tNoticeService;
 
     /**
      * 账号注册：
@@ -78,6 +86,9 @@ public class TboosMemberBusiness {
             }
             if (BeanUtil.isNotEmpty(addVo.getHeadImageUrl())){
                 tUser.setHeadImageUrl(addVo.getHeadImageUrl());
+            }
+            if (BeanUtil.isNotEmpty(addVo.getUserAddress())){
+                tUser.setUserAddress(addVo.getUserAddress());
             }
             tUser.setCreateTime(date);
             tUser.setCreateUser("yy");
@@ -367,10 +378,63 @@ public class TboosMemberBusiness {
             if (BeanUtil.isNotEmpty(updateVo.getHeadImageUrl())){
                 tUser.setHeadImageUrl(updateVo.getHeadImageUrl());
             }
+            if (BeanUtil.isNotEmpty(updateVo.getUserAddress())){
+                tUser.setUserAddress(updateVo.getUserAddress());
+            }
             tUser.setModifyUser("yy");
             tUser.setModifyTime(new Date());
             tUserService.updateById(tUser);
         }
 
+    }
+
+    /**
+     * 订单分类查询
+     * @return
+     */
+    public Map<Integer,List<ShopOrderResVo>> getOrderSort() {
+        List<OrderSortResDto> orderList = tShopOrderMapper.getProductSort();
+        if (CollUtil.isEmpty(orderList)){
+            return new HashMap<>();
+        }
+        //根据订单id、分组
+        Map<Integer, List<OrderSortResDto>> orderMap = orderList.
+                stream().collect(Collectors.groupingBy(OrderSortResDto::getId));
+        //获取订单的图片list
+        Map<Integer,List<String>> imageMap = new HashMap<>();
+        for (OrderSortResDto resVo : orderList) {
+            List<OrderSortResDto> orderSortResDtos = orderMap.get(resVo.getId());
+            if (CollUtil.isNotEmpty(orderSortResDtos)){
+                List<String> collect = orderSortResDtos.stream().map(OrderSortResDto::getProductImageUrl)
+                        .collect(Collectors.toList());
+                imageMap.put(resVo.getId(),collect);
+            }
+        }
+        //数据封装
+        List<ShopOrderResVo> data = new ArrayList<>();
+        for (OrderSortResDto resDto : orderList) {
+            ShopOrderResVo vo = new ShopOrderResVo();
+            if (MapUtil.isNotEmpty(imageMap)&&BeanUtil.isNotEmpty(imageMap.get(resDto.getId()))){
+                vo.setProductImageUrl(imageMap.get(resDto.getId()));
+            }
+            BeanUtil.copyProperties(resDto,vo);
+            data.add(vo);
+        }
+        return data.stream().collect(Collectors.groupingBy(ShopOrderResVo::getStatus));
+    }
+
+    /**
+     * 通知公告
+     * @param userId
+     * @return
+     */
+    public Map<Integer, String> getNoticeInfo(String userId) {
+        List<TGroupNoticeUser> users = tGroupNoticeUserService.list(new LambdaQueryWrapper<TGroupNoticeUser>()
+                .eq(TGroupNoticeUser::getUserId, userId).eq(TGroupNoticeUser::getIsRead, IndexContants.NOT_READ));
+        if (CollUtil.isEmpty(users)){
+            return new HashMap<>();
+        }
+        Set<Integer> notices = users.stream().map(TGroupNoticeUser::getNoticeId).collect(Collectors.toSet());
+        return tNoticeService.listByIds(notices).stream().collect(Collectors.toMap(TNotice::getId,TNotice::getContentInfo));
     }
 }

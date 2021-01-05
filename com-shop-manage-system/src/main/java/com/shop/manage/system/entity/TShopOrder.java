@@ -12,16 +12,16 @@ import java.util.Date;
 
 /**
  * <p>
- *  会员信息表
+ *  订单表
  * </p>
  *
  * @author yangtl
- * @since 2020-12-29
+ * @since 2021-01-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class TUser implements Serializable {
+public class TShopOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,34 +29,34 @@ public class TUser implements Serializable {
     private Integer id;
 
     /**
-     * 登录名
+     * 产品id
      */
-    private String loginName;
+    private Integer productId;
 
     /**
-     * 昵称
+     * 产品名称
      */
-    private String nickName;
+    private String shopProductName;
 
     /**
-     * 启用状态 0：未启用 1：已启用
+     * 产品类型名称
+     */
+    private String productTypeName;
+
+    /**
+     * 产品规格
+     */
+    private String productStandard;
+
+    /**
+     * 产品产地
+     */
+    private String producingArea;
+
+    /**
+     * 启用状态 0：未 1：启
      */
     private String isAvailable;
-
-    /**
-     * 身份证号
-     */
-    private String idCard;
-
-    /**
-     * 联系电话
-     */
-    private String contactPhone;
-
-    /**
-     * 真实名称
-     */
-    private String factName;
 
     /**
      * 创建时间
@@ -79,17 +79,19 @@ public class TUser implements Serializable {
     private String modifyUser;
 
     /**
-     * 会员等级
+     *  0:待处理 1：已发货 2：已收货 3：已入库 4：已收款 5 ：异常订单
      */
-    private Integer memberLevel;
+    private Integer status;
 
     /**
-     * 头像地址
+     * 产品价格
      */
-    private String headImageUrl;
+    private String price;
+
     /**
-     * 地址
+     * 采购量
      */
-    private String userAddress;
+    private String buyCount;
+
 
 }

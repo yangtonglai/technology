@@ -1,8 +1,7 @@
 package com.shop.manage.system.controller;
 
 
-import com.shop.manage.system.business.TProductTypeBusiness;
-import com.shop.manage.system.entity.TIndex;
+import com.shop.manage.system.business.TProductInfoBusiness;
 import com.shop.manage.system.entity.TProductType;
 import com.shop.manage.system.exception.CustomException;
 import com.shop.manage.system.vo.ProductDetailsResVo;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -25,10 +23,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/market/")
-public class TProductController {
+public class TProductInfoController {
 
     @Autowired
-    private TProductTypeBusiness tProductTypeBusiness;
+    private TProductInfoBusiness tProductInfoBusiness;
 
 
     /**
@@ -38,7 +36,7 @@ public class TProductController {
      */
     @GetMapping("getProductType")
     public List<TProductType> getProductType(){
-        return tProductTypeBusiness.getProductType();
+        return tProductInfoBusiness.getProductType();
     }
 
     /**
@@ -48,7 +46,7 @@ public class TProductController {
      */
     @GetMapping("addProductType")
     public void addProductType(@RequestParam(value = "productTypeName") String productTypeName){
-        tProductTypeBusiness.addProductType(productTypeName);
+        tProductInfoBusiness.addProductType(productTypeName);
     }
 
     /**
@@ -58,7 +56,7 @@ public class TProductController {
      */
     @GetMapping("updateProductType")
     public void updateProductType(@RequestParam(value = "id")Integer id) throws CustomException {
-         tProductTypeBusiness.updateProductType(id);
+        tProductInfoBusiness.updateProductType(id);
     }
 
 
@@ -69,7 +67,7 @@ public class TProductController {
      */
     @GetMapping("getProductDetail")
     public List<ProductDetailsResVo> getProductDetail(){
-        return tProductTypeBusiness.getProductDetail();
+        return tProductInfoBusiness.getProductDetail();
     }
 
     /**
@@ -80,7 +78,7 @@ public class TProductController {
     // TODO: 2020/12/29 用户id
     @GetMapping("getMemberPrice")
     public List<ProductDetailsResVo> getMemberPrice(String userId){
-        return tProductTypeBusiness.getMemberPrice(userId);
+        return tProductInfoBusiness.getMemberPrice(userId);
     }
 
 
